@@ -1,0 +1,14 @@
+# Ignore the virtual environment
+*/venv
+
+# Python specific
+**/__pycache__
+
+# Ignore the .env file
+.env
+
+# Ignore the .vscode folder
+.vscode
+
+# Ignore the test files/folders
+test.py
