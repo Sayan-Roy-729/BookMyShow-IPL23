@@ -19,6 +19,11 @@ def browser_function(url="https://www.google.com"):
     # ignore the certificate and SSL errors
     chrome_options.add_argument('--ignore-certificate-errors')
     chrome_options.add_argument('--ignore-ssl-errors')
+    # add aditional options (for hosting)
+    chrome_options.add_argument('--disable-gpu')
+    # chrome_options.add_argument('--headless')
+    # chrome_options.binary_location = "/usr/bin/google-chrome"
+    chrome_options.add_argument('--no-sandbox')
     # maximize the browser window
     chrome_options.add_argument("start-maximized")
     # define with the driver and open the browser
@@ -36,11 +41,42 @@ def send_email(content: list, to: str) -> bool:
     from_email = os.getenv("FROM_EMAIL")
     email_password = os.getenv("EMAIL_PASSWORD")
     try:
-        # create the HTML content
-        html_content = "<ul>"
+        # create the HTML content for the email
+        html_content = """
+        <html>
+            <head>
+                <style type="text/css">
+                    tr {
+                        border-bottom: 1px solid #ddd;
+                    }
+                    tr:hover {background-color: #D6EEEE;}
+                    table, th, td {
+                        border: 1px solid black;
+                        border-radius: 10px;
+                    }
+                    .center {
+                        margin-left: auto;
+                        margin-right: auto;
+                        width: 70%;
+                    }
+                </style>
+            </head>
+                <body style="width:100%;">
+                    <table class="center" style="width:100%">
+                        <tr>
+                            <th>Match Between</th>
+                            <th>Month</th>
+                            <th>Date</th>
+                        </tr>
+        """
         for match in content:
-            html_content += f"<li>{match}</li>"
-        html_content += "</ul>"
+            html_content += f"""
+                <tr style="text-align:center">
+                    <td>{match[0]}</td>
+                    <td>{match[1]}</td>
+                    <td>{match[2]}</td>
+                </tr>"""
+        html_content += "</table></body></html>"
 
         # create a message object
         msg = EmailMessage()
